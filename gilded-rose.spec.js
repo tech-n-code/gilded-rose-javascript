@@ -42,6 +42,26 @@ describe("updateQuality", () => {
         expect(testItem.quality).toBe(1);
     });
 
+    it("Quality is never more than 50 (test with tickets).", () => {
+        const testItem = new Item("Backstage passes to a TAFKAL80ETC concert", 15, 50);
+        items.push(testItem);
+    
+        updateQuality();
+    
+        expect(testItem.sellIn).toBe(14);
+        expect(testItem.quality).toBe(50);
+    });
+
+    it("Quality is never more than 50 (test with Brie).", () => {
+        const testItem = new Item("Aged Brie", 2, 50);
+        items.push(testItem);
+    
+        updateQuality();
+    
+        expect(testItem.sellIn).toBe(1);
+        expect(testItem.quality).toBe(50);
+    });
+
     it("Quality and sellIn of 'Sulfras' does not change.", () => {
         const testItem = new Item("Sulfuras, Hand of Ragnaros", 0, 80);
         items.push(testItem);
