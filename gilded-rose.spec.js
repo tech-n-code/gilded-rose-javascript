@@ -1,12 +1,16 @@
 import { expect, describe, it } from "vitest";
-import { Item, items, updateQuality } from "./gilded-rose.js";
+// import { Item, items, updateQuality } from "./gilded-rose.js";
+
+import { Item, items, Basic, Brie, Legendary, Ticket, Conjured } from "./gilded-rose.js";
 
 describe("updateQuality", () => {
     it("Reduces quality and sellIn of 'basic' items by 1.", () => {
-        const testItem = new Item("basic", 5, 3);
+        // const testItem = new Item("basic", 5, 3);
+        const testItem = new Basic("basic", 5, 3);
         items.push(testItem);
 
-        updateQuality();
+        // updateQuality();
+        testItem.updateQuality();
 
         expect(testItem.sellIn).toBe(4);
         expect(testItem.quality).toBe(2);
@@ -32,7 +36,7 @@ describe("updateQuality", () => {
         expect(testItem.quality).toBe(0);
     });
 
-    it("'Aged Brie' quility increases the older it gets.", () => {
+    it("'Brie' quility increases the older it gets.", () => {
         const testItem = new Item("Aged Brie", 2, 0);
         items.push(testItem);
 
@@ -111,4 +115,15 @@ describe("updateQuality", () => {
         expect(testItem.sellIn).toBe(-1);
         expect(testItem.quality).toBe(0);
     });
+
+    it("Conjured item quality degrade twice as fast.", () => {
+        const testItem = new Item("Conjured Mana Cake", 3, 6);
+        items.push(testItem);
+    
+        updateQuality();
+    
+        expect(testItem.sellIn).toBe(2);
+        expect(testItem.quality).toBe(4);
+    });
+
 });
