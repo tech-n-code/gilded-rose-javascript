@@ -8,30 +8,17 @@ export class Item {
 
 export let items = [];
 
-items.push(new Item("+5 Dexterity Vest", 10, 20));
-items.push(new Item("Aged Brie", 2, 0));
-items.push(new Item("Elixir of the Mongoose", 5, 7));
-items.push(new Item("Sulfuras, Hand of Ragnaros", 0, 80));
-items.push(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
-items.push(new Item("Conjured Mana Cake", 3, 6));
-
-export class Basic extends Item { //add export
+export class Basic extends Item {
     constructor(name, sellIn, quality) {
         super(name, sellIn, quality);
     }
     updateQuality() {
         this.sellIn = this.sellIn - 1;
-        if (sellIn < 0) {
+        if (this.sellIn < 0) {
             this.quality = this.quality - 2;
-        } else {
+        } else if (this.quality > 0 && this.quality <= 50) {
             this.quality = this.quality - 1;
-        }
-    }
-    get sellIn() {
-        return this.sellIn;
-    }
-    get quality() {
-        return this.quality;
+        } 
     }
 }
 
@@ -40,14 +27,10 @@ export class Brie extends Basic {
         super(name, sellIn, quality);
     }
     updateQuality() {
-        super.updateQuality();
-        if (this.quality < 50) {
-            this.quality = this.quality + 2; //to offset Basic -1
-        } else if (sellIn < 0) {
-            this.quality = this.quality + 3; //to offset Basic -2
-        } else {
-            this.quality = 50;
-        }
+        this.sellIn = this.sellIn - 1;
+        if (this.quality >= 0 && this.quality < 50) {
+            this.quality = this.quality + 1;
+        } 
     }
 }
 
@@ -56,14 +39,7 @@ export class Legendary extends Basic {
         super(name, sellIn, quality);
     }
     updateQuality() {
-        super.updateQuality();
-        if (this.quality < 50) {
-            this.quality = this.quality - 2; //to offset Basic -1
-        } else if (sellIn < 0) {
-            this.quality = this.quality - 3; //to offset Basic -2
-        } else {
-            this.quality = 80; //Set to 80
-        }
+        // Do nothing.
     }
 }
 
@@ -72,13 +48,19 @@ export class Ticket extends Basic {
         super(name, sellIn, quality);
     }
     updateQuality() {
-        super.updateQuality();
-        if (this.sellIn < 10) {
-            this.quality = this.quality + 3 //to offset Basic -1
+        this.sellIn = this.sellIn - 1;
+        if (this.sellIn >= 10) {
+            this.quality = this.quality + 1
+        } else if (this.sellIn >= 5 && this.sellIn < 10) {
+            this.quality = this.quality + 2
         } else if (this.sellIn < 5) {
-            this.quality = this.quality + 3 //to offset Basic -1
-        } else if (this.sellIn === 0 || sellIn < 0) {
+            this.quality = this.quality + 3
+        }
+        if (this.sellIn === 0 || this.sellIn < 0) {
             this.quality = 0;
+        }
+        if (this.quality > 50) {
+            this.quality = 50;
         }
     }
 }
@@ -89,10 +71,19 @@ export class Conjured extends Basic {
     }
     updateQuality() {
         super.updateQuality();
-        super.updateQuality();
+        this.quality = this.quality - 1;
     }
 }
 
+items.push(new Basic("+5 Dexterity Vest", 10, 20));
+items.push(new Brie("Aged Brie", 2, 0));
+items.push(new Basic("Elixir of the Mongoose", 5, 7));
+items.push(new Legendary("Sulfuras, Hand of Ragnaros", 0, 80));
+items.push(new Ticket("Backstage passes to a TAFKAL80ETC concert", 15, 20));
+items.push(new Conjured("Conjured Mana Cake", 3, 6));
+
+// ORIGINAL LOGIC
+//
 // export const updateQuality = () => {
 //   for (let item of items) {
 //     if (
